@@ -7,6 +7,7 @@ const siteLabel = pathname === "/" ? "/home/damiska $ ls ~/" : `/home/damiska${p
 const links = [
     { href: "/", label: "Home" },
     { href: "/Projects", label: "Projects" },
+    { href: "/Blog", label: "Blogs" },
 ];
 ---
 
@@ -28,8 +29,10 @@ const links = [
         align-items: flex-start;
         gap: 0.75rem;
         padding: 1rem 1.25rem;
-        background: color-mix(in srgb, var(--backgroundColor) 88%, black 12%);
+        background: var(--backgroundColor);
         border-bottom: 1px solid color-mix(in srgb, var(--accentColor) 45%, transparent);
+        margin-left: 25px;
+        margin-right: 25px;
     }
 
     .navbar__brand {

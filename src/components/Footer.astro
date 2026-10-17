@@ -1,0 +1,22 @@
+---
+import { accentColor, accentColorHover, backgroundColor, foregroundColor, accentColorHover2 } from "../lib/theme";
+---
+
+<footer >
+  <p>Damián Roháček</p>
+  <p>Made with Astro</p>
+</footer>
+
+<style define:vars={{ accentColorHover2 }}>
+footer {
+    margin-top: auto;
+    border-top: 1px solid color-mix(in srgb, var(--accentColor) 45%, transparent);
+    padding: 0 1.5rem;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+a {
+    color: var(--accentColorHover2);
+    text-decoration: none;
+}
+</style>
