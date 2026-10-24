@@ -1,65 +1,134 @@
 ---
-import { accentColor, accentColorHover, backgroundColor, foregroundColor, accentColorHover2 } from "../lib/theme";
+import {
+  accentColor,
+  accentColorHover,
+  backgroundColor,
+  foregroundColor,
+  accentColorHover2,
+} from "../lib/theme";
+import {
+  getLocaleFromPath,
+  navbarTranslations,
+  stripLocaleFromPath,
+  withLocale,
+} from "../lib/i18n";
 
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
-const siteLabel = pathname === "/" ? "/home/damiska $ ls ~/" : `/home/damiska${pathname} $ ls ~/`;
+const locale = getLocaleFromPath(pathname);
+const strippedPath = stripLocaleFromPath(pathname);
+const targetLocale = locale === "en" ? "cz" : "en";
+const siteLabel =
+  pathname === "/"
+    ? "/home/damiska $ ls ~/"
+    : `/home/damiska${pathname} $ ls ~/`;
 
 const links = [
-    { href: "/", label: "Home" },
-    { href: "/Projects", label: "Projects" },
-    { href: "/Blog", label: "Blogs" },
+  {
+    path: "/",
+    href: withLocale("/", locale),
+    label: navbarTranslations[locale].home,
+  },
+  {
+    path: "/Projects",
+    href: withLocale("/projects", locale),
+    label: navbarTranslations[locale].projects,
+  },
+  {
+    path: "/contact",
+    href: withLocale("contact", locale),
+    label: navbarTranslations[locale].contact,
+  }
 ];
+
+const switchLocaleHref = withLocale(strippedPath, targetLocale);
+const switchLocaleLabel = navbarTranslations[locale].switchLocale;
 ---
 
 <nav class="navbar" aria-label="Primary">
-    <a class="navbar__brand" href="/">{siteLabel}</a>
-    <div class="navbar__links" aria-label="Directory listing">
-        {links.map((link) => (
-            <a class:list={["navbar__link", pathname === link.href ? "is-active" : undefined]} href={link.href}>
-                {link.label}
-            </a>
-        ))}
-    </div>
+  <a class="navbar__brand" href="/">{siteLabel}</a>
+  <div class="navbar__links" aria-label="Directory listing">
+    {
+      links.map((link) => (
+        <a
+          class:list={[
+            "navbar__link",
+            strippedPath === link.path ? "is-active" : undefined,
+          ]}
+          href={link.href}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    <a class="navbar__locale" href={switchLocaleHref}>
+      {switchLocaleLabel}
+    </a>
+  </div>
 </nav>
 
-<style define:vars={{ accentColor, backgroundColor, foregroundColor, accentColorHover, accentColorHover2 }}>
-    .navbar {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 1rem 1.25rem;
-        background: var(--backgroundColor);
-        border-bottom: 1px solid color-mix(in srgb, var(--accentColor) 45%, transparent);
-        margin-left: 25px;
-        margin-right: 25px;
-    }
+<style
+  define:vars={{
+    accentColor,
+    backgroundColor,
+    foregroundColor,
+    accentColorHover,
+    accentColorHover2,
+  }}
+>
+  .navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: var(--backgroundColor);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--accentColor) 45%, transparent);
+    margin-left: 25px;
+    margin-right: 25px;
+  }
 
-    .navbar__brand {
-        color: var(--accentColor);
-        font-weight: 700;
-        text-decoration: none;
-        white-space: nowrap;
-    }
+  .navbar__brand {
+    color: var(--accentColor);
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
 
-    .navbar__links {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-        flex-wrap: wrap;
-        white-space: nowrap;
-        padding-left: 1rem;
-    }
+  .navbar__links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    white-space: nowrap;
+    padding-left: 1rem;
+    width: 100%;
+  }
 
-    .navbar__link {
-        color: var(--foregroundColor);
-        text-decoration: none;
-    }
+  .navbar__link {
+    color: var(--foregroundColor);
+    text-decoration: none;
+  }
 
-    .navbar__link:hover {
-        color: var(--accentColorHover);
-    }
-    .navbar__link.is-active {
-        color: var(--accentColorHover2);
-    }
+  .navbar__link:hover {
+    color: var(--accentColorHover);
+  }
+  .navbar__link.is-active {
+    color: var(--accentColorHover2);
+  }
+
+  .navbar__locale {
+    margin-left: auto;
+    color: var(--accentColor);
+    text-decoration: none;
+    border: 1px solid color-mix(in srgb, var(--accentColor) 55%, transparent);
+    border-radius: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    line-height: 1.2;
+  }
+
+  .navbar__locale:hover {
+    color: var(--accentColorHover);
+    border-color: color-mix(in srgb, var(--accentColorHover) 70%, transparent);
+  }
 </style>
